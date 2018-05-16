@@ -8,9 +8,9 @@ import './App.css';
 const fakeAxios ={
   get(){
     return new Promise((resolve,reject)=>{
-// setTimeout(() => {resolve({ data:7 })
-setTimeout(()=>reject(new Error ('my error message')),1000);
-
+setTimeout(() => {resolve({ data:7 })
+}, 2000);
+// setTimeout(()=>reject(new Error ('my error message')),1000);
     })
   }
 }
@@ -26,7 +26,7 @@ class App extends Component {
     fakeAxios.get('/abc/def').then(response =>{
       this.setState({data:response.data})
     }).catch(error =>{
-      console.error("error happend", error);
+      console.log("error happend", error);
     })
   }
   render() {
