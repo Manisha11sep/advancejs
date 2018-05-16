@@ -28,6 +28,31 @@ class App extends Component {
     }).catch(error =>{
       console.log("error happend", error);
     })
+
+    // fakeAxios.get(`getcoords.com/api`).then(response => {
+    //   const coords = response.data.coords
+    //   fakeAxios.get(`zipcode.com/api/${coords}`).then(response => {
+    //     const zipCode = response.data.zipCode
+    //     fakeAxios.get(`getweather.com/api/${zipCode}`).then(response => {
+    //       this.setState({ data: response.data })
+    //     })
+    //   })
+    // })
+
+    //*********************** Way to write nested axios***************** */
+  //   const promise1 = fakeAxios.get(`getcoords.com/api`)
+  //   const promise2 = promise1.then(response => {
+  //     const coords = response.data.coords
+  //     return fakeAxios.get(`zipcode.com/api/${coords}`)
+  //   })
+  //   const promise3 = promise2.then(response => {
+  //     const zipCode = response.data.zipCode
+  //     return fakeAxios.get(`getweather.com/api/${zipCode}`)
+  //   })
+  //   const promise4 = promise3.then(response => {
+  //     this.setState({ data: response.data })
+  //   })
+  // }
   }
   render() {
     return (

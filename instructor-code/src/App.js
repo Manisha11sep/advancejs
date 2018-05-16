@@ -5,8 +5,8 @@ import './App.css';
 const fakeAxios = {
   get() {
     return new Promise((resolve, reject) => {
-      // setTimeout(() => resolve({ data: 7}), 1000)
-      setTimeout(() => reject('my error'), 1000)
+      setTimeout(() => resolve({ data: 7}), 1000)
+      // setTimeout(() => reject(new Error('my error message')), 1000)
     })
   }
 }
@@ -20,13 +20,27 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fakeAxios.get('some fake url').then(response => {
-      console.log('inside promise')
-      this.setState({ data: response.data })
-    }).catch(error => {
-      console.log('error happened', error)
+    // fakeAxios.get(`getcoords.com/api`).then(response => {
+    //   const coords = response.data.coords
+    //   fakeAxios.get(`zipcode.com/api/${coords}`).then(response => {
+    //     const zipCode = response.data.zipCode
+    //     fakeAxios.get(`getweather.com/api/${zipCode}`).then(response => {
+    //       this.setState({ data: response.data })
+    //     })
+    //   })
+    // })
+    const promise1 = fakeAxios.get(`getcoords.com/api`)
+    const promise2 = promise1.then(response => {
+      const coords = response.data.coords
+      return fakeAxios.get(`zipcode.com/api/${coords}`)
     })
-    console.log('after promise')
+    const promise3 = promise2.then(response => {
+      const zipCode = response.data.zipCode
+      return fakeAxios.get(`getweather.com/api/${zipCode}`)
+    })
+    const promise4 = promise3.then(response => {
+      this.setState({ data: response.data })
+    })
   }
 
   render() {
