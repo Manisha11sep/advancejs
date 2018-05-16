@@ -3,9 +3,9 @@ import logo from './logo.svg';
 import './App.css';
 
 const fakeAxios = {
-  get() {
+  get(url, ms = 1000) {
     return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ data: 7}), 1000)
+      setTimeout(() => resolve({ data: 7 }), ms)
       // setTimeout(() => reject(new Error('my error message')), 1000)
     })
   }
@@ -19,28 +19,13 @@ class App extends Component {
     }
   }
 
-  componentDidMount() {
-    // fakeAxios.get(`getcoords.com/api`).then(response => {
-    //   const coords = response.data.coords
-    //   fakeAxios.get(`zipcode.com/api/${coords}`).then(response => {
-    //     const zipCode = response.data.zipCode
-    //     fakeAxios.get(`getweather.com/api/${zipCode}`).then(response => {
-    //       this.setState({ data: response.data })
-    //     })
-    //   })
-    // })
-    const promise1 = fakeAxios.get(`getcoords.com/api`)
-    const promise2 = promise1.then(response => {
-      const coords = response.data.coords
-      return fakeAxios.get(`zipcode.com/api/${coords}`)
-    })
-    const promise3 = promise2.then(response => {
-      const zipCode = response.data.zipCode
-      return fakeAxios.get(`getweather.com/api/${zipCode}`)
-    })
-    const promise4 = promise3.then(response => {
-      this.setState({ data: response.data })
-    })
+  async componentDidMount() {
+    const coordsPromise = fakeAxios.get(`getcoords.com/api`)
+    const statePromise = fakeAxios.get(`getstate.com/api`, 5000)
+    const [coords, state] = await Promise.all([coordsPromise, statePromise])
+    const { data: zipCode } = await fakeAxios.get(`getZipcode.com/${coords}/${state}`)
+    const { data: weatherData } = await fakeAxios.get(`getWeather.com/${zipCode}`)
+    this.setState({ data: weatherData })
   }
 
   render() {

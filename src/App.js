@@ -22,13 +22,32 @@ class App extends Component {
       
     }
   }
-  componentDidMount(){
-    fakeAxios.get('/abc/def').then(response =>{
-      this.setState({data:response.data})
-    }).catch(error =>{
-      console.log("error happend", error);
-    })
+  // componentDidMount(){
+  //   fakeAxios.get('/abc/def').then(response =>{
+  //     this.setState({data:response.data})
+  //   }).catch(error =>{
+  //     console.log("error happend", error);
+  //   })
+//
+    async componentDidMount() {
+      const coordsPromise = fakeAxios.get(`getcoords.com/api`)
+      const statePromise = fakeAxios.get(`getstate.com/api`, 5000)
+      const [coords, state] = await Promise.all([coordsPromise, statePromise])
+      const { data: zipCode } = await fakeAxios.get(`getZipcode.com/${coords}/${state}`)
+      const { data: weatherData } = await fakeAxios.get(`getWeather.com/${zipCode}`)
+      this.setState({ data: weatherData })
+    }
+  
 
+
+// *****************async await *************************
+    // async componentDidMount{
+  //   const { data: coords } = await fakeAxios.get(`getcoords.com/api`)
+  //   console.log('hello')
+  //   const { dataweatherData } = await fakeAxios.get(`getWeather.com/${zipCode}`)
+  //   this.setState({ data: weatherData }): zipCode } = await fakeAxios.get(`getZipcode.com/${coords}`)
+   
+  // }
     // fakeAxios.get(`getcoords.com/api`).then(response => {
     //   const coords = response.data.coords
     //   fakeAxios.get(`zipcode.com/api/${coords}`).then(response => {
@@ -53,7 +72,7 @@ class App extends Component {
   //     this.setState({ data: response.data })
   //   })
   // }
-  }
+  
   render() {
     return (
       <div className="App">
